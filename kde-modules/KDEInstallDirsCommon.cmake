@@ -15,21 +15,31 @@
 # GNUInstallDirs code deals with re-configuring, but that is dealt with
 # by the _define_* macros in this module).
 set(_LIBDIR_DEFAULT "lib")
+
 # Override this default 'lib' with 'lib64' if:
 #  - we are on a Linux, kFreeBSD or Hurd system but NOT cross-compiling
+#  - we are NOT on arch
 #  - we are NOT on debian
 #  - we are NOT on flatpak
 #  - we are NOT on NixOS
 #  - we are on a 64 bits system
 # reason is: amd64 ABI: https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build
-# For Debian with multiarch, use 'lib/${CMAKE_LIBRARY_ARCHITECTURE}' if
-# CMAKE_LIBRARY_ARCHITECTURE is set (which contains e.g. "i386-linux-gnu"
-# See https://wiki.debian.org/Multiarch
+
+# A reliable way to detect if the distro is Arch based is to check if the pacman package manager is present on the system
+set(IS_ARCH_FAMILY FALSE)
+find_program(PACMAN_EXEC pacman)
+if(PACMAN_EXEC)
+  set(IS_ARCH_FAMILY TRUE)
+endif()
+
 if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GNU")
    AND NOT CMAKE_CROSSCOMPILING
-   AND NOT EXISTS "/etc/arch-release"
+   AND NOT IS_ARCH_FAMILY
    AND NOT DEFINED ENV{FLATPAK_ID}
    AND NOT EXISTS "/etc/NIXOS")
+  # For Debian with multiarch, use 'lib/${CMAKE_LIBRARY_ARCHITECTURE}' if
+  # CMAKE_LIBRARY_ARCHITECTURE is set (which contains e.g. "i386-linux-gnu"
+  # See https://wiki.debian.org/Multiarch
   if (EXISTS "/etc/debian_version") # is this a debian system ?
     if(CMAKE_LIBRARY_ARCHITECTURE)
       set(_LIBDIR_DEFAULT "lib/${CMAKE_LIBRARY_ARCHITECTURE}")
