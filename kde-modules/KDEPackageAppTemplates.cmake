@@ -72,6 +72,8 @@ Since 5.18
 
 cmake_policy(VERSION 3.16)
 
+include(KDEInstallDirs)
+
 if(NOT CMAKE_CROSSCOMPILING)
    set(default_kde_install_app_templates ON)
 else()
@@ -120,7 +122,7 @@ function(kde_package_app_templates)
     foreach(_templateName ${ARG_TEMPLATES})
         get_filename_component(_tmp_file ${_templateName} ABSOLUTE)
         get_filename_component(_baseName ${_tmp_file} NAME_WE)
-        set(_template ${CMAKE_CURRENT_BINARY_DIR}/${_baseName}.tar.bz2)
+        set(_template ${CMAKE_BINARY_DIR}/${KDE_INSTALL_KAPPTEMPLATESDIR}/${_baseName}.tar.bz2)
 
         # also enlist directories as deps to catch file removals
         file(GLOB_RECURSE _subdirs_entries LIST_DIRECTORIES true CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}/*")
@@ -140,6 +142,7 @@ function(kde_package_app_templates)
 
             # Make tar archive reproducible, the arguments are only available with GNU tar
             add_custom_command(OUTPUT ${_template}
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/${KDE_INSTALL_KAPPTEMPLATESDIR}
                 COMMAND ${_tar_executable} ARGS
                    --exclude .kdev_ignore --exclude .svn
                    --sort=name
@@ -153,6 +156,7 @@ function(kde_package_app_templates)
             )
         else()
             add_custom_command(OUTPUT ${_template}
+                COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/${KDE_INSTALL_KAPPTEMPLATESDIR}
                 COMMAND ${CMAKE_COMMAND} -E tar "cvfj" ${_template} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
                 DEPENDS ${_subdirs_entries}
