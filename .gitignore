@@ -30,3 +30,4 @@ __pycache__
 .cmake/
 /compile_commands.json
 /Testing
+.ccls-cache
