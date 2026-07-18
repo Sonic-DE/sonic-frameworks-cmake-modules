@@ -53,7 +53,7 @@ namespace {
     private:
         bool eventFilter(QObject *obj, QEvent *event) override
         {
-            if (event->type() == QEvent::LanguageChange) {
+            if ((event->type() == QEvent::LanguageChange) && (obj == QCoreApplication::instance())) {
                 const auto systemLocaleName = getSystemLocale().name();
                 if (m_loadedLocale != systemLocaleName) {
                     m_loadedLocale = systemLocaleName;
