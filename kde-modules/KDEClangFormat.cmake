@@ -54,7 +54,10 @@ cmake_policy(VERSION 3.16)
 # try to find clang-format in path
 find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
 
-# instantiate our clang-format file, must be in source directory for tooling if we have the tool
+# Instantiate our clang-format file in the source directory for tooling if we
+# have the tool. Files carrying ECM's generated-file marker are refreshed from
+# the central template so all SonicDE repositories share the enforced policy.
+# Project-owned files without the marker remain untouched.
 if(KDE_CLANG_FORMAT_EXECUTABLE)
     set(CLANG_FORMAT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
     if (EXISTS ${CLANG_FORMAT_FILE})
@@ -90,12 +93,16 @@ function(KDE_CLANG_FORMAT)
             string(FIND ${_full_file_path} ${_binary_dir} _binary_idx)
             string(FIND ${_full_file_path} ${_ci_install_dir} _dependency_idx)
             if(NOT _binary_idx EQUAL 0 AND NOT _dependency_idx EQUAL 0)
-                get_filename_component(_file_name ${_file} NAME)
-                file(RELATIVE_PATH _rel_file_path ${CMAKE_SOURCE_DIR} ${_full_file_path})
-                string(REPLACE "/" "_" unique_target_name "clang-format-${_rel_file_path}")
-                string(REPLACE "%" "_" unique_target_name ${unique_target_name}) # some imvalid cmake target names
-                string(REPLACE "{" "_" unique_target_name ${unique_target_name})
-                string(REPLACE "}" "_" unique_target_name ${unique_target_name})
+                # Use a bounded hash rather than embedding the entire relative
+                # path in the target name. Generated/autogen paths can be very
+                # long and CMake appends its own suffixes when creating files
+                # under CMakeFiles/, exceeding common filesystem name limits.
+                string(SHA256 _file_hash "${_full_file_path}")
+                string(SUBSTRING "${_file_hash}" 0 20 _file_hash)
+                get_filename_component(_file_name "${_file}" NAME_WE)
+                string(REGEX REPLACE "[^A-Za-z0-9_.+-]" "_" _file_name "${_file_name}")
+                string(SUBSTRING "${_file_name}" 0 32 _file_name)
+                set(unique_target_name "clang-format-${_file_name}-${_file_hash}")
                 add_custom_target(${unique_target_name}
                     DEPENDS ${_full_file_path}
                 )
