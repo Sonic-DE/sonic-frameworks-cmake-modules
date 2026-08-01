@@ -1,0 +1,3 @@
+# Project-owned file. CMake configuration must not overwrite it.
+DisableFormat: true
+SortIncludes: false

@@ -75,6 +75,12 @@ add_subdirectory(ECMCheckOutboundLicenseTest)
 
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
+set(KDEClangFormatTest_EXTRA_OPTIONS --build-target all)
+add_test_macro(KDEClangFormatTest
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/KDEClangFormatTest
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/KDEClangFormatTest/check.cmake
+)
 add_test_macro(KDEFetchTranslations dummy)
 
 add_test_variant(KDEInstallDirsTest.vars_in_sync_no_args

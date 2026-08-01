@@ -1,0 +1,5 @@
+file(READ "${SOURCE_DIR}/.clang-format" contents)
+set(expected "# Project-owned file. CMake configuration must not overwrite it.\nDisableFormat: true\nSortIncludes: false\n")
+if(NOT contents STREQUAL expected)
+    message(FATAL_ERROR "KDEClangFormat overwrote an existing .clang-format file")
+endif()
