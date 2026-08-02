@@ -73,7 +73,7 @@ function(ecm_generate_python_bindings)
         message(FATAL_ERROR "Python3_EXECUTABLE not set. Make sure find_package(Python3) is called before including ECMGeneratePythonBindings")
     endif()
 
-    execute_process(COMMAND ${Python3_EXECUTABLE} -Esc "import build" RESULT_VARIABLE PYTHON_BUILD_CHECK_EXIT_CODE OUTPUT_QUIET ERROR_QUIET)
+    execute_process(COMMAND ${Python3_EXECUTABLE} -Ec "import build" RESULT_VARIABLE PYTHON_BUILD_CHECK_EXIT_CODE OUTPUT_QUIET ERROR_QUIET)
 
     if (PYTHON_BUILD_CHECK_EXIT_CODE)
         message(FATAL_ERROR "The 'build' Python module is needed for ECMGeneratePythonBindings")
