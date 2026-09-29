@@ -277,9 +277,15 @@ if(WIN32)
         "executables for internal use by programs and libraries"
         LIBEXEC_INSTALL_DIR)
 else()
-    _define_relative(LIBEXECDIR LIBDIR "libexec"
-        "executables for internal use by programs and libraries"
-        LIBEXEC_INSTALL_DIR)
+    if(IS_ARCH_FAMILY)
+        _define_relative(LIBEXECDIR LIBDIR ""
+            "executables for internal use by programs and libraries"
+            LIBEXEC_INSTALL_DIR)
+    else()
+        _define_relative(LIBEXECDIR LIBDIR "libexec"
+            "executables for internal use by programs and libraries"
+            LIBEXEC_INSTALL_DIR)
+    endif()
 endif()
 
 _define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
