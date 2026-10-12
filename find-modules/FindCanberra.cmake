@@ -52,8 +52,6 @@ set(Canberra_VERSION ${PC_Canberra_VERSION})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Canberra
-    FOUND_VAR
-        Canberra_FOUND
     REQUIRED_VARS
         Canberra_LIBRARIES
         Canberra_INCLUDE_DIRS
@@ -84,7 +82,6 @@ set_package_properties(Canberra PROPERTIES
 # Compatibility variables. In a previous life FindCanberra lived
 # in a number of different repos: don't break them if they use ECM but have not
 # been updated for this finder.
-set(CANBERRA_FOUND ${Canberra_FOUND})
 set(CANBERRA_VERSION ${Canberra_VERSION})
 set(CANBERRA_LIBRARIES ${Canberra_LIBRARIES})
 set(CANBERRA_INCLUDE_DIRS ${Canberra_INCLUDE_DIRS})

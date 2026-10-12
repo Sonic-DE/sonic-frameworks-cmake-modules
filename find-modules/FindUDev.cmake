@@ -44,7 +44,6 @@ set(UDev_VERSION ${PC_UDEV_VERSION})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UDev
-    FOUND_VAR UDev_FOUND
     REQUIRED_VARS UDev_INCLUDE_DIRS UDev_LIBRARIES
     VERSION_VAR UDev_VERSION
 )
@@ -61,7 +60,6 @@ if(UDev_FOUND AND NOT TARGET UDev::UDev)
 endif()
 
 # backward compat variables, remove for KF6
-set(UDEV_FOUND ${UDev_FOUND})
 set(UDEV_LIBS ${UDev_LIBRARIES})
 set(UDEV_INCLUDE_DIR ${UDev_INCLUDE_DIRS})
 mark_as_advanced(UDEV_FOUND UDEV_LIBS UDEV_INCLUDE_DIR)
