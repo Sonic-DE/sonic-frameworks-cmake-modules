@@ -170,10 +170,10 @@ Example usage:
       SOURCE_DIRS
           src
       LINK_QCHS
-          Qt5Core_QCH
-          Qt5Xml_QCH
-          Qt5Gui_QCH
-          Qt5Widgets_QCH
+          Qt6Core_QCH
+          Qt6Xml_QCH
+          Qt6Gui_QCH
+          Qt6Widgets_QCH
       BLANK_MACROS
           MyLib_EXPORT
           MyLib_DEPRECATED
@@ -193,7 +193,7 @@ Example usage (with two QCH files, second linking first):
       ORG_DOMAIN org.myorg
       SOURCES ${MyLib_PUBLIC_HEADERS}
       MD_MAINPAGE src/mylib/README.md
-      LINK_QCHS Qt5Core_QCH
+      LINK_QCHS Qt6Core_QCH
       TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
       QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
       COMPONENT Devel
@@ -205,7 +205,7 @@ Example usage (with two QCH files, second linking first):
       ORG_DOMAIN org.myorg
       SOURCES ${MyOtherLib_PUBLIC_HEADERS}
       MD_MAINPAGE src/myotherlib/README.md
-      LINK_QCHS Qt5Core_QCH MyLib_QCH
+      LINK_QCHS Qt6Core_QCH MyLib_QCH
       TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
       QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
       COMPONENT Devel
@@ -293,19 +293,11 @@ function(_ecm_ensure_qt_qch_targets)
             string(REPLACE "." "" _version ${Qt${QT_MAJOR_VERSION}Core_VERSION})
             # TODO: properly find each tag file
             # TODO: complete list of Qt modules
-            if (QT_MAJOR_VERSION EQUAL "6")
-                set(_module_list
-                    3D Bluetooth Concurrent Core DBus Gui Location
-                    Network Nfc Pdf Positioning PrintSupport Qml Quick
-                    Sensors SerialBus SerialPort Sql StateMachine Svg
-                    Test TextToSpeech WebChannel WebEngine WebSockets Widgets Xml)
-            else()
-                set(_module_list
-                    3D Bluetooth Concurrent Core DBus Gui Location
-                    Network Positioning PrintSupport Qml Quick
-                    Sensors SerialPort Sql Svg
-                    WebChannel WebEngine WebSockets Widgets Xml XmlPatterns)
-            endif()
+            set(_module_list
+                3D Bluetooth Concurrent Core DBus Gui Location
+                Network Nfc Pdf Positioning PrintSupport Qml Quick
+                Sensors SerialBus SerialPort Sql StateMachine Svg
+                Test TextToSpeech WebChannel WebEngine WebSockets Widgets Xml)
             foreach(_module ${_module_list})
                 string(TOLOWER ${_module} _lowermodule)
 
@@ -327,36 +319,25 @@ function(_ecm_ensure_qt_qch_targets)
             _ecm_setup_qt_qch_links(Gui          Core)
             _ecm_setup_qt_qch_links(Location     Positioning Gui Core)
             _ecm_setup_qt_qch_links(Network      Core)
-            if (QT_MAJOR_VERSION EQUAL "6")
-                _ecm_setup_qt_qch_links(Nfc      Core)
-                _ecm_setup_qt_qch_links(Pdf      Gui Core)
-            endif()
+            _ecm_setup_qt_qch_links(Nfc          Core)
+            _ecm_setup_qt_qch_links(Pdf          Gui Core)
             _ecm_setup_qt_qch_links(Positioning  Core)
             _ecm_setup_qt_qch_links(PrintSupport Widgets Gui Core)
             _ecm_setup_qt_qch_links(Qml          Network Core)
             _ecm_setup_qt_qch_links(Quick        Qml Network Gui Core)
             _ecm_setup_qt_qch_links(Sensors      Core)
-            if (QT_MAJOR_VERSION EQUAL "6")
-                _ecm_setup_qt_qch_links(SerialBus   Core)
-            endif()
+            _ecm_setup_qt_qch_links(SerialBus    Core)
             _ecm_setup_qt_qch_links(SerialPort   Core)
             _ecm_setup_qt_qch_links(Sql          Core)
-            if (QT_MAJOR_VERSION EQUAL "6")
-                _ecm_setup_qt_qch_links(StateMachine   Core)
-            endif()
+            _ecm_setup_qt_qch_links(StateMachine Core)
             _ecm_setup_qt_qch_links(Svg          Widgets Gui Core)
             _ecm_setup_qt_qch_links(Test         Core)
-            if (QT_MAJOR_VERSION EQUAL "6")
-                _ecm_setup_qt_qch_links(TextToSpeech   Core)
-            endif()
+            _ecm_setup_qt_qch_links(TextToSpeech Core)
             _ecm_setup_qt_qch_links(WebChannel   Qml Core)
             _ecm_setup_qt_qch_links(WebEngine    Quick Qml Gui Core)
             _ecm_setup_qt_qch_links(WebSockets   Network Core)
             _ecm_setup_qt_qch_links(Widgets      Gui Core)
             _ecm_setup_qt_qch_links(Xml          Core)
-            if (QT_MAJOR_VERSION EQUAL "5")
-                _ecm_setup_qt_qch_links(XmlPatterns  Network Core)
-            endif()
         endif()
     endif()
 endfunction()
@@ -452,23 +433,14 @@ function(ecm_add_qch target_name)
         PURPOSE "Needed for API dox QCH file generation${doxygen_description_addition}"
     )
 
-    if (QT_MAJOR_VERSION EQUAL "5")
-        find_package(QHelpGenerator REQUIRED)
-        set_package_properties(QHelpGenerator PROPERTIES
-            TYPE REQUIRED
-            PURPOSE "Needed for API dox QCH file generation"
-            DESCRIPTION "Part of Qt5 tools"
-        )
-    else()
-        find_package(Qt6 COMPONENTS ToolsTools CONFIG REQUIRED)
-        set_package_properties(Qt6ToolsTools PROPERTIES
-            TYPE REQUIRED
-            PURPOSE "Needed for API dox QCH file generation"
-            DESCRIPTION "qhelpgenerator from Qt6 tools"
-        )
-        if(TARGET Qt6::qhelpgenerator)
-            get_target_property(QHelpGenerator_EXECUTABLE Qt6::qhelpgenerator LOCATION)
-        endif()
+    find_package(Qt6 COMPONENTS ToolsTools CONFIG REQUIRED)
+    set_package_properties(Qt6ToolsTools PROPERTIES
+        TYPE REQUIRED
+        PURPOSE "Needed for API dox QCH file generation"
+        DESCRIPTION "qhelpgenerator from Qt6 tools"
+    )
+    if(TARGET Qt6::qhelpgenerator)
+        get_target_property(QHelpGenerator_EXECUTABLE Qt6::qhelpgenerator LOCATION)
     endif()
 
     set(_missing_tools)

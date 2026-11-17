@@ -51,12 +51,8 @@ endif()
 # we can only use symbolic functions when everything is built with that
 # otherwise we'll break function pointer based connects and method lookups
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
-if (QT_MAJOR_VERSION EQUAL "6")
-    find_package(Qt6Core)
-    set(ENABLE_BSYMBOLICFUNCTIONS ${QT_FEATURE_reduce_relocations})
-else ()
-    set(ENABLE_BSYMBOLICFUNCTIONS ON)
-endif()
+find_package(Qt6Core)
+set(ENABLE_BSYMBOLICFUNCTIONS ${QT_FEATURE_reduce_relocations})
 
 # Current defaults
 include(KDECompilerSettings NO_POLICY_SCOPE)

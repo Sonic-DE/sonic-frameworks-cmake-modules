@@ -15,7 +15,6 @@ install(FILES
     check-outbound-license.py
     ECMConfiguredInstall.cmake
     ECMCoverageOption.cmake
-    ECMCreateQmFromPoFiles.cmake
     ECMDeprecationSettings.cmake
     ECMEnableSanitizers.cmake
     ECMFeatureSummary.cmake
@@ -41,7 +40,6 @@ install(FILES
     ECMPackageConfigHelpers.cmake
     ECMPoQmTools.cmake
     ECMQmLoader.cpp.in
-    ECMQmlModule5.cmake
     ECMQmlModule6.cmake
     ECMQmlModule.cmake
     ECMQmlModule.cpp.in
@@ -52,7 +50,6 @@ install(FILES
     ECMQtDeclareLoggingCategory.cmake
     ECMQtDeclareLoggingCategory.cpp.in
     ECMQtDeclareLoggingCategory.h.in
-    ECMQueryQmake.cmake
     ECMQueryQt.cmake
     ECMSetupQtPluginMacroNames.cmake
     ECMSetupVersion.cmake

@@ -96,9 +96,7 @@ among others, to generate a subdirectory where the module will be installed to.
 
 If the ``VERSION`` argument is specified, it is used to initialize the default
 version that is used by  ``ecm_target_qml_sources`` when adding QML files. If it
-is not specified, a  default of 1.0 is used. Additionally, if a version greater
-than or equal to 2.0 is specified, the major version is appended to the
-Qt5 installation path of the module.
+is not specified, a  default of 1.0 is used.
 In case you don't specify a version for the module, but specify a version for
 the individual sources, the latter will be set as the resulting version for
 this module. This will also be used in the ECMFindQmlModule module.
@@ -237,27 +235,10 @@ cmake_policy(VERSION 3.16)
 
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
-# This is also used by ECMFindQmlModule, so needs to be available for both
-# Qt 5 and Qt 6.
+# This is also used by ECMFindQmlModule.
 macro(_ecm_qmlmodule_uri_to_path ARG_OUTPUT ARG_PATH ARG_VERSION)
     string(REPLACE "." "/" _output "${ARG_PATH}")
-
-    # If the major version of the module is >2.0, Qt expects a ".MajorVersion" suffix on the directory
-    # However, we only need to do this in Qt5
-    if ("${QT_MAJOR_VERSION}" STREQUAL "5" AND "${ARG_VERSION}" VERSION_GREATER_EQUAL 2.0)
-        string(REGEX MATCH "^([0-9]+)" _version_major ${ARG_VERSION})
-        set("${ARG_OUTPUT}" "${_output}.${_version_major}")
-    else()
-        set("${ARG_OUTPUT}" "${_output}")
-    endif()
+    set("${ARG_OUTPUT}" "${_output}")
 endmacro()
 
-# The implementation for this has diverged significantly between Qt 5 and Qt 6
-# so it has been split to separate files.
-if ("${QT_MAJOR_VERSION}" STREQUAL "6")
-    include(${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule6.cmake)
-elseif("${QT_MAJOR_VERSION}" STREQUAL "5")
-    include(${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule5.cmake)
-else()
-    message(FATAL_ERROR "Could not determine Qt major version")
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule6.cmake)

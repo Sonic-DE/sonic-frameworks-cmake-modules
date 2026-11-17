@@ -82,8 +82,8 @@ Example usage:
 .. code-block:: cmake
 
   ecm_generate_pkgconfig_file(
-      BASE_NAME KF5Archive
-      DEPS Qt5Core
+      BASE_NAME KF6Archive
+      DEPS Qt6Core
       FILENAME_VAR pkgconfig_filename
       INSTALL
   )

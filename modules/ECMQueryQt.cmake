@@ -10,8 +10,8 @@ ECMQueryQt
 ---------------
 This module can be used to query the installation paths used by Qt.
 
-For Qt5 this uses ``qmake``, and for Qt6 this used ``qtpaths`` (the latter has built-in
-support to query the paths of a target platform when cross-compiling).
+This uses Qt 6's ``qtpaths``, which has built-in support to query the paths of a
+target platform when cross-compiling.
 
 This module defines the following function:
 ::
@@ -46,26 +46,14 @@ if (CMAKE_CXX_COMPILER)
     enable_language(CXX)
 endif()
 
-if (QT_MAJOR_VERSION STREQUAL "5")
-    # QUIET to accommodate the TRY option
-    find_package(Qt${QT_MAJOR_VERSION}Core QUIET)
-    set(_exec_name_text "Qt5 qmake")
-    if(TARGET Qt5::qmake)
-        get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
+# QUIET to accommodate the TRY option
+find_package(Qt6 COMPONENTS CoreTools QUIET CONFIG)
+set(_exec_name_text "Qt6 qtpaths")
+if (TARGET Qt6::qtpaths)
+    get_target_property(_qtpaths_executable Qt6::qtpaths LOCATION)
 
-        set(QUERY_EXECUTABLE ${_qmake_executable_default})
-        set(_cli_option "-query")
-    endif()
-elseif(QT_MAJOR_VERSION STREQUAL "6")
-    # QUIET to accommodate the TRY option
-    find_package(Qt6 COMPONENTS CoreTools QUIET CONFIG)
-    set(_exec_name_text "Qt6 qtpaths")
-    if (TARGET Qt6::qtpaths)
-        get_target_property(_qtpaths_executable Qt6::qtpaths LOCATION)
-
-        set(QUERY_EXECUTABLE ${_qtpaths_executable})
-        set(_cli_option "--query")
-    endif()
+    set(QUERY_EXECUTABLE ${_qtpaths_executable})
+    set(_cli_option "--query")
 endif()
 
 function(ecm_query_qt result_variable qt_variable)

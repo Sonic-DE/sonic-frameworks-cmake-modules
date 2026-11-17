@@ -291,7 +291,6 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
            endif()
            set(CMAKE_DISABLE_FIND_PACKAGE_X11 true)
            set(CMAKE_DISABLE_FIND_PACKAGE_XCB true)
-           set(CMAKE_DISABLE_FIND_PACKAGE_Qt5X11Extras true)
        endif()
     endif()
 

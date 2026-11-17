@@ -12,7 +12,7 @@ function(list_dependencies target libs)
         string(REGEX MATCH ".*\\(NEEDED\\) +Shared library: +\\[(.+)\\]$" matched ${line})
         set(currentLib ${CMAKE_MATCH_1})
 
-        if(NOT ${currentLib} MATCHES "libQt5.*" AND matched)
+        if(NOT ${currentLib} MATCHES "libQt6.*" AND matched)
             find_file(ourlib-${currentLib} ${currentLib} HINTS ${OUTPUT_DIR} ${EXPORT_DIR} ${ECM_ADDITIONAL_FIND_ROOT_PATH} NO_DEFAULT_PATH PATH_SUFFIXES lib)
 
             if(ourlib-${currentLib})

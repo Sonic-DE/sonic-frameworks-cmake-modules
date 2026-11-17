@@ -8,7 +8,7 @@ ECMQtDeclareLoggingCategory
 ---------------------------
 
 This module provides the ``ecm_qt_declare_logging_category`` function for
-generating declarations for logging categories in Qt5, and the
+generating declarations for logging categories in Qt, and the
 ``ecm_qt_install_logging_categories`` function for generating and installing
 a file in KDebugSettings format with the info about all those categories,
 as well as a file with info about any renamed categories if defined.

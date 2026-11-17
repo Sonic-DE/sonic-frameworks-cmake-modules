@@ -1,8 +1,4 @@
-if (QT_MAJOR_VERSION EQUAL "6")
-    set(QT_VERSION_OPT "-DBUILD_WITH_QT6=ON")
-else()
-    set(QT_VERSION_OPT "-DBUILD_WITH_QT6=OFF")
-endif()
+set(QT_VERSION_OPT "-DQT_MAJOR_VERSION=6")
 
 macro(add_check NAME)
     string(REPLACE "." "/" dir "${NAME}")

@@ -29,7 +29,6 @@ install(FILES
     FindPhoneNumber.cmake
     FindPoppler.cmake
     FindPulseAudio.cmake
-    FindQHelpGenerator.cmake
     FindReuseTool.cmake
     FindSasl2.cmake
     FindSeccomp.cmake

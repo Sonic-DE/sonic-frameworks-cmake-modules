@@ -90,11 +90,7 @@ include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
 
 ecm_find_package_version_check(QtWaylandScanner)
 
-if (QT_MAJOR_VERSION STREQUAL "5")
-    ecm_query_qt(qtwaylandscanner_dir QT_HOST_BINS)
-else()
-    ecm_query_qt(qtwaylandscanner_dir QT_HOST_LIBEXECS)
-endif()
+ecm_query_qt(qtwaylandscanner_dir QT_HOST_LIBEXECS)
 
 # Find qtwaylandscanner
 find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qtwaylandscanner_dir})

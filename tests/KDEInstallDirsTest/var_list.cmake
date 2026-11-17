@@ -43,20 +43,6 @@ set(var_suffixes
     SYSTEMDUSERUNITDIR
     TEMPLATEDIR
     WALLPAPERDIR)
-if (QT_MAJOR_VERSION EQUAL "5")
-    list(APPEND var_suffixes
-        DATADIR_KF5
-        INCLUDEDIR_KF5
-        KNOTIFY5RCDIR
-        KXMLGUI5DIR
-        KSERVICES5DIR
-        KSERVICETYPES5DIR
-        LIBEXECDIR_KF5
-        QTQUICKIMPORTSDIR
-        KSERVICESDIR
-        KSERVICETYPESDIR
-    )
-endif()
 if(APPLE)
     list(APPEND var_suffixes BUNDLEDIR)
 endif()

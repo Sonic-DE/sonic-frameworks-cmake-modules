@@ -149,24 +149,8 @@ function(ecm_process_po_files_as_qm lang)
     endif()
 
     # Find lrelease and lconvert
-    if (QT_MAJOR_VERSION EQUAL "5")
-        find_package(Qt5LinguistTools CONFIG REQUIRED)
-    else()
-        find_package(Qt6 COMPONENTS LinguistTools CONFIG REQUIRED)
-    endif()
-
-    if(TARGET Qt${QT_MAJOR_VERSION}::lconvert)
-        set(lconvert_executable Qt${QT_MAJOR_VERSION}::lconvert)
-    else()
-        # Qt < 5.3.1 does not define Qt5::lconvert
-        get_target_property(lrelease_location Qt5::lrelease LOCATION)
-        get_filename_component(lrelease_path ${lrelease_location} DIRECTORY)
-        find_program(lconvert_executable
-            NAMES lconvert-qt5 lconvert
-            PATHS ${lrelease_path}
-            NO_DEFAULT_PATH
-            )
-    endif()
+    find_package(Qt6 COMPONENTS LinguistTools CONFIG REQUIRED)
+    set(lconvert_executable Qt6::lconvert)
 
     # Create commands to turn po files into qm files
     set(qm_files)

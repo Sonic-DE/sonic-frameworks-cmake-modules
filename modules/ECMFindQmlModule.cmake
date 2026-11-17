@@ -41,16 +41,11 @@ cmake_policy(VERSION 3.16)
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(ecm_find_qmlmodule MODULE_NAME)
-    if (QT_MAJOR_VERSION STREQUAL 6)
-      cmake_parse_arguments(ARG REQUIRED "" "" ${ARGN})
-        if (ARG_UNPARSED_ARGUMENTS)
-          list(GET ARG_UNPARSED_ARGUMENTS 0 VERSION) # If we have any unparsed args, that should be the version
-        endif()
-        set(ARGN "") # The find_package call below should not receive arguments in KF6
-    else()
-        list(GET ARGN 0 VERSION)
-        list(REMOVE_AT ARGN 0)
+    cmake_parse_arguments(ARG REQUIRED "" "" ${ARGN})
+    if (ARG_UNPARSED_ARGUMENTS)
+        list(GET ARG_UNPARSED_ARGUMENTS 0 VERSION) # If we have any unparsed args, that should be the version
     endif()
+    set(ARGN "") # The find_package call below should not receive arguments in KF6
 
     set(GENMODULE "${MODULE_NAME}-QMLModule")
     configure_file("${MODULES_DIR}/ECMFindQmlModule.cmake.in" "Find${GENMODULE}.cmake" @ONLY)

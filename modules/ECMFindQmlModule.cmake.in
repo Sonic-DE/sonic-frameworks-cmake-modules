@@ -16,7 +16,17 @@ if (QT_MAJOR_VERSION EQUAL "6")
     # Get the qmldir file
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
     set(KDE_QMLDIR "${KDE_INSTALL_FULL_QMLDIR}/${MODULEDIR}")
-    find_file(QMLDIR_FILE qmldir ${KDE_QMLDIR} NO_CACHE)
+    # Modules built earlier into a prefix (such as a staging tree) come before the install destination.
+    set(_qml_search_dirs)
+    if (NOT IS_ABSOLUTE "${KDE_INSTALL_QMLDIR}")
+        foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
+            list(APPEND _qml_search_dirs "${_prefix}/${KDE_INSTALL_QMLDIR}/${MODULEDIR}")
+        endforeach()
+    endif()
+    find_file(QMLDIR_FILE qmldir PATHS ${_qml_search_dirs} ${KDE_QMLDIR} NO_CACHE)
+    if (QMLDIR_FILE)
+        get_filename_component(KDE_QMLDIR "${QMLDIR_FILE}" DIRECTORY)
+    endif()
     if (NOT QMLDIR_FILE) # Check the install destination, the QT_PLUGIN_PATH might not be set up correctly at this point
         # Check the Qt installation
         ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
@@ -53,13 +63,8 @@ endif()
 
 # If we haven't checked the version above, use qmlplugindump
 if (NOT CMAKE_CROSSCOMPILING AND NOT MODULE_NOTFOUND AND NOT @GENMODULE@_FOUND AND (NOT DEFINED QT6_IS_SHARED_LIBS_BUILD OR QT6_IS_SHARED_LIBS_BUILD))
-    if (QT_MAJOR_VERSION EQUAL "6")
-        find_package(Qt6 COMPONENTS QmlTools REQUIRED)
-        get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
-    else()
-        ecm_query_qt(qt_binaries_dir QT_HOST_BINS)
-        find_program(QMLPLUGINDUMP_PROGRAM NAMES qmlplugindump HINTS ${qt_binaries_dir})
-    endif()
+    find_package(Qt6 COMPONENTS QmlTools REQUIRED)
+    get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
 
     set(ENV{QML2_IMPORT_PATH} ${KDE_INSTALL_FULL_QMLDIR})
     execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)

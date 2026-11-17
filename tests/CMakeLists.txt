@@ -37,11 +37,7 @@ add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
 add_subdirectory(ECMGeneratePkgConfigFile)
 
-if (TARGET Qt6::Core)
-    set(QT_VERSION_OPT "-DBUILD_WITH_QT6=ON")
-else()
-    set(QT_VERSION_OPT "-DBUILD_WITH_QT6=OFF")
-endif()
+set(QT_VERSION_OPT "-DQT_MAJOR_VERSION=6")
 
 # a macro for tests that have a simple format where the name matches the
 # directory and project
@@ -103,18 +99,6 @@ set(KDEInstallDirsTest.vars_in_sync_cmake_arg_EXTRA_OPTIONS
 add_test_variant(KDEInstallDirsTest.vars_in_sync_cmake_arg
                  KDEInstallDirsTest.vars_in_sync dummy)
 
-# KDEInstallDirs6 explicitly sets KDE_INSTALL_DIRS_NO_DEPRECATED to false,
-# hence this test makes no sense in that case
-if(TARGET Qt5::Core)
-    set(KDEInstallDirsTest.vars_in_sync_oldstyle_arg_EXTRA_OPTIONS
-        --build-options -DBIN_INSTALL_DIR=altbin
-                        -DBINDIR_expected_value=altbin
-                        -DCMAKE_WARN_DEPRECATED=TRUE
-        )
-    add_test_variant(KDEInstallDirsTest.vars_in_sync_oldstyle_arg
-                     KDEInstallDirsTest.vars_in_sync dummy)
-endif()
-
 set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
     --build-options -DCMAKE_INSTALL_PREFIX=/usr
                     -DKDE_INSTALL_USE_QT_SYS_PATHS=FALSE
@@ -126,7 +110,7 @@ set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
 add_test_variant(KDEInstallDirsTest.relative_or_absolute_usr
                  KDEInstallDirsTest.relative_or_absolute dummy)
 
-if (TARGET Qt5::qmake OR TARGET Qt6::Core)
+if (TARGET Qt6::Core)
     set(KDEInstallDirsTest.relative_or_absolute_qt_EXTRA_OPTIONS
         --build-options -DCMAKE_INSTALL_PREFIX=/tmp
                         -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE
@@ -226,7 +210,7 @@ if (TARGET Qt${QT_MAJOR_VERSION}::Quick)
     )
     add_test_variant(ECMFindQmlModuleTest.nonexistent ECMFindQmlModuleTest dummy)
     set(ECMFindQmlModuleTest.existent_EXTRA_OPTIONS
-        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.0 -DEXPECTED_FOUND_VARAIBLE=TRUE -DBUILD_WITH_QT6=ON
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.0 -DEXPECTED_FOUND_VARAIBLE=TRUE
     )
     add_test_variant(ECMFindQmlModuleTest.existent ECMFindQmlModuleTest dummy)
 
@@ -235,67 +219,10 @@ if (TARGET Qt${QT_MAJOR_VERSION}::Quick)
         --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.9 -DEXPECTED_FOUND_VARAIBLE=FALSE
     )
     add_test_variant(ECMFindQmlModuleTest.missmatching_version ECMFindQmlModuleTest dummy)
-    if (QT_MAJOR_VERSION VERSION_GREATER 5)
-        set(ECMFindQmlModuleTest.later_version_found_EXTRA_OPTIONS
-            --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=1.9 -DEXPECTED_FOUND_VARAIBLE=TRUE
-        )
-        add_test_variant(ECMFindQmlModuleTest.later_version_found ECMFindQmlModuleTest dummy)
-    endif()
-endif()
-
-if (TARGET Qt5::Quick)
-    set(ECMQmlModuleTest.static_full_qt5_EXTRA_OPTIONS
-        --build-target install
-        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/static_full_qt5/install
-                        -DBUILD_SHARED_LIBS=OFF
-                        -DQT_MAJOR_VERSION=5
+    set(ECMFindQmlModuleTest.later_version_found_EXTRA_OPTIONS
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=1.9 -DEXPECTED_FOUND_VARAIBLE=TRUE
     )
-    add_test_variant(ECMQmlModuleTest.static_full_qt5 ECMQmlModuleTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/static_full_qt5/check.cmake"
-    )
-
-    set(ECMQmlModuleTest.shared_full_qt5_EXTRA_OPTIONS
-        --build-target install
-        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_full_qt5/install
-                        -DBUILD_SHARED_LIBS=ON
-                        -DQT_MAJOR_VERSION=5
-    )
-    add_test_variant(ECMQmlModuleTest.shared_full_qt5 ECMQmlModuleTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_full_qt5/check.cmake"
-    )
-
-    set(ECMQmlModuleTest.static_qmlonly_qt5_EXTRA_OPTIONS
-        --build-target install
-        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/static_qmlonly_qt5/install
-                        -DBUILD_SHARED_LIBS=OFF
-                        -DQML_ONLY=ON
-                        -DQT_MAJOR_VERSION=5
-    )
-    add_test_variant(ECMQmlModuleTest.static_qmlonly_qt5 ECMQmlModuleTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/static_qmlonly_qt5/check.cmake"
-    )
-
-    set(ECMQmlModuleTest.shared_qmlonly_qt5_EXTRA_OPTIONS
-        --build-target install
-        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_qmlonly_qt5/install
-                        -DBUILD_SHARED_LIBS=ON
-                        -DQML_ONLY=ON
-                        -DQT_MAJOR_VERSION=5
-    )
-    add_test_variant(ECMQmlModuleTest.shared_qmlonly_qt5 ECMQmlModuleTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_qmlonly_qt5/check.cmake"
-    )
-
-    set(ECMQmlModuleTest.shared_depends_qt5_EXTRA_OPTIONS
-        --build-target install
-        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_depends_qt5/install
-                        -DBUILD_SHARED_LIBS=ON
-                        -DDEPENDS=ON
-                        -DQT_MAJOR_VERSION=5
-    )
-    add_test_variant(ECMQmlModuleTest.shared_depends_qt5 ECMQmlModuleTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_depends_qt5/check.cmake"
-    )
+    add_test_variant(ECMFindQmlModuleTest.later_version_found ECMFindQmlModuleTest dummy)
 endif()
 
 if (TARGET Qt6::Quick)
@@ -311,7 +238,7 @@ if (TARGET Qt6::Quick)
 
     set(ECMQmlModuleTest.shared_full_qt6_EXTRA_OPTIONS
         --build-target install
-        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_full_qt5/install
+        --build-options -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_full_qt6/install
                         -DBUILD_SHARED_LIBS=ON
                         -DQT_MAJOR_VERSION=6
     )

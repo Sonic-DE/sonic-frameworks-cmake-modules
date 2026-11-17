@@ -2,6 +2,11 @@
 
 Sonic Frameworks CMake Modules is the shared build toolkit that puts SonicDE's programs and files in the right places on your system.
 
+## Unreleased
+
+- SonicDE now builds on systems that also have parts of Qt 5 installed, such as FreeBSD and GhostBSD: the build toolkit only ever looks for Qt 6.
+- When SonicDE is built from source, each part now uses the SonicDE interface components built alongside it, instead of KDE's copies installed on the system, and the build works on systems without KDE.
+
 ## 6.31.0 (2026-10-20)
 
 - On Arch Linux-based distributions, SonicDE's helper programs now install to the location those systems expect.

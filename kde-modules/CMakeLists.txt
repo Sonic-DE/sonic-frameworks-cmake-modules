@@ -11,7 +11,6 @@ install(FILES
     KDEFrameworkCompilerLegacySettings.cmake
     KDEFrameworkCompilerSettings.cmake
     KDEGitCommitHooks.cmake
-    KDEInstallDirs5.cmake
     KDEInstallDirs6.cmake
     KDEInstallDirs.cmake
     KDEInstallDirsCommon.cmake

@@ -13,7 +13,7 @@ As well as the function below, this module creates the cache variable
 This assumes Qt and the current project are both installed to the same
 non-system prefix.  Packagers who use ``-DCMAKE_INSTALL_PREFIX=/usr`` will
 certainly want to set ``ECM_MKSPECS_INSTALL_DIR`` to something like
-``share/qt5/mkspecs/modules``.
+``lib/qt6/mkspecs/modules``.
 
 The main thing is that this should be the ``modules`` subdirectory of either
 the default qmake ``mkspecs`` directory or of a directory that will be in the
