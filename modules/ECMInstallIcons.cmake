@@ -32,8 +32,12 @@ locale-specific directory.
 ``<size>`` is a numeric pixel size (typically 16, 22, 32, 48, 64, 128 or 256)
 or ``sc`` for scalable (SVG) files, ``<group>`` is one of the standard
 FreeDesktop.org icon groups (actions, animations, apps, categories, devices,
-emblems, emotes, intl, mimetypes, places, status) and ``<ext>`` is one of
-``.png``, ``.mng`` or ``.svgz``.
+emblems, emotes, intl, mimetypes, places, status) and ``<ext>`` is ``.png`` or
+``.svg``, the formats of the FreeDesktop.org icon theme specification.
+
+``.svgz`` and ``.mng`` files are installed as well, but the specification does
+not allow them: GTK does not load them, and ``gtk-update-icon-cache`` leaves
+them out of the ``icon-theme.cache`` file it writes for the theme.
 
 The typical installation directory is ``share/icons``.
 
@@ -145,10 +149,10 @@ macro(_ecm_install_icons_v1 _defaultpath)
    endforeach (_current_ICON)
 
    # and now the svg icons
-   file(GLOB _icons *.svgz)
+   file(GLOB _icons *.svg *.svgz)
    foreach (_current_ICON ${_icons} )
       # since CMake 2.6 regex matches are stored in special variables CMAKE_MATCH_x, if it didn't match, they are empty
-      string(REGEX MATCH "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" _dummy "${_current_ICON}")
+      string(REGEX MATCH "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz?)$" _dummy "${_current_ICON}")
       set(_type  "${CMAKE_MATCH_1}")
       set(_group "${CMAKE_MATCH_2}")
       set(_name  "${CMAKE_MATCH_3}")
